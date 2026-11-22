@@ -39,6 +39,16 @@ body {
   color: #333333;
 }
 
+/* 3D Flip Perspective & Cards */
+.perspective-container {
+  perspective: 1200px;
+}
+
+.flip-card-item {
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
 /* Image effects */
 .grayscale-image {
   filter: grayscale(100%) contrast(115%) brightness(95%);

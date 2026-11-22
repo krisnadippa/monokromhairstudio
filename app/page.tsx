@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
 import SmoothTitle from "@/components/SmoothTitle";
 
 const TOP_GALLERY = [
@@ -18,15 +20,47 @@ const BOTTOM_GALLERY = [
 ];
 
 export default function ComingSoonPage() {
+  const pageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!pageRef.current) return;
+
+    // Target all gallery cards for staggered 3D flip animation
+    const cards = pageRef.current.querySelectorAll(".flip-card-item");
+
+    gsap.set(cards, {
+      opacity: 0,
+      rotateY: -75,
+      scale: 0.9,
+      y: 12,
+      transformPerspective: 1200,
+      transformOrigin: "center center",
+    });
+
+    gsap.to(cards, {
+      opacity: 1,
+      rotateY: 0,
+      scale: 1,
+      y: 0,
+      duration: 1.05,
+      stagger: 0.09,
+      ease: "power3.out",
+      delay: 0.25,
+    });
+  }, []);
+
   return (
-    <div className="bg-white text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white antialiased overflow-x-hidden min-h-screen flex flex-col justify-between py-4 sm:py-6 px-3 sm:px-6">
+    <div
+      ref={pageRef}
+      className="bg-white text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white antialiased overflow-x-hidden min-h-screen flex flex-col justify-between py-4 sm:py-6 px-3 sm:px-6"
+    >
       {/* Top Gallery Row: 2 Photos on Mobile, 4 Photos on Tablet/Desktop */}
-      <section aria-label="Creative Visuals Top Gallery" className="w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 overflow-hidden">
+      <section aria-label="Creative Visuals Top Gallery" className="w-full max-w-7xl mx-auto perspective-container">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {TOP_GALLERY.map((item) => (
             <div
               key={item.id}
-              className={`relative aspect-[3/4] overflow-hidden bg-neutral-100 rounded-sm group cursor-pointer shadow-sm ${
+              className={`flip-card-item relative aspect-[3/4] overflow-hidden bg-neutral-100 rounded-sm group cursor-pointer shadow-sm ${
                 item.mobile ? "block" : "hidden sm:block"
               }`}
             >
@@ -99,12 +133,12 @@ export default function ComingSoonPage() {
       </section>
 
       {/* Bottom Gallery Row: 2 Photos on Mobile, 4 Photos on Tablet/Desktop */}
-      <section aria-label="Creative Visuals Bottom Gallery" className="w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 overflow-hidden">
+      <section aria-label="Creative Visuals Bottom Gallery" className="w-full max-w-7xl mx-auto perspective-container">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {BOTTOM_GALLERY.map((item) => (
             <div
               key={item.id}
-              className={`relative aspect-[3/4] overflow-hidden bg-neutral-100 rounded-sm group cursor-pointer shadow-sm ${
+              className={`flip-card-item relative aspect-[3/4] overflow-hidden bg-neutral-100 rounded-sm group cursor-pointer shadow-sm ${
                 item.mobile ? "block" : "hidden sm:block"
               }`}
             >
